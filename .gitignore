@@ -1,0 +1,26 @@
+# Salidas generadas y entornos virtuales
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Salidas de generación
+evidencias/revision/
+*.pdf
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Credenciales: nunca versionar
+.env
+.env.*
+*.pem
+*.key

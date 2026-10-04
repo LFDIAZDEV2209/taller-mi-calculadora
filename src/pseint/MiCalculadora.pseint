@@ -1,0 +1,308 @@
+// =====================================================================
+// TALLER "MI CALCULADORA"
+// Estructuras de Datos - pseudocodigo en PSeInt
+// ---------------------------------------------------------------------
+// Estructuras de datos empleadas:
+//   Arreglo de tipo Real   -> numeros, resultados
+//   Arreglo de tipo Cadena -> nombresOperacion, simboloOperacion,
+//                             operaciones, estadoOperacion
+//
+// Pasos del taller, en el orden del enunciado:
+//   I.   Arreglo que almacena los numeros ingresados por el usuario.
+//   II.  Solicitar los numeros y almacenarlos en el arreglo.
+//   III. Arreglo con las operaciones a realizar (suma, resta, mult, div).
+//   IV.  Solicitar la operacion y almacenarla en el arreglo de operaciones.
+//   V.   Estructura de control (lazo) para iterar el arreglo de operaciones.
+//   VI.  Condicionales dentro del lazo para ejecutar cada operacion.
+//   VII. Mostrar una suma, una resta, una multiplicacion y una division.
+// =====================================================================
+Algoritmo MiCalculadora
+
+	// -----------------------------------------------------------------
+	// PASO I - Declaracion (dimensionamiento) de los arreglos
+	// Cada arreglo se declara con un elemento extra de holgura para que
+	// el algoritmo sea independiente de la base de indexacion que tenga
+	// configurada la maquina donde se ejecuta PSeInt (base 0 o base 1).
+	// -----------------------------------------------------------------
+	Dimension numeros[6]
+	Dimension nombresOperacion[5]
+	Dimension simboloOperacion[5]
+	Dimension operaciones[5]
+	Dimension resultados[5]
+	Dimension estadoOperacion[5]
+
+	// Variables auxiliares de control
+	Entero cantidad
+	Entero i
+	Entero j
+	Entero k
+	Entero opcion
+	Entero codigo
+	Entero operacionesConError
+	Real numeroIngresado
+	Real acumulado
+	Logico datoValido
+	Logico divisorEnCero
+	Cadena entrada
+
+	Escribir "========================================================"
+	Escribir "              MI CALCULADORA - TALLER ARREGLOS"
+	Escribir "            Estructuras de Datos - PSeInt"
+	Escribir "========================================================"
+	Escribir ""
+
+	// -----------------------------------------------------------------
+	// PASO II - Se solicita la cantidad de numeros y luego cada numero,
+	// almacenandolos en el arreglo numeros.
+	// El dato se valida con la funcion EsNumeroValido antes de convertirlo.
+	// -----------------------------------------------------------------
+	Repetir
+		Escribir "Cuantos numeros desea operar (entre 2 y 5)?: "
+		Leer cantidad
+		Si (cantidad < 2) o (cantidad > 5) Entonces
+			Escribir "Dato invalido: la cantidad debe estar entre 2 y 5."
+		FinSi
+	Hasta Que (cantidad >= 2) y (cantidad <= 5)
+
+	Para i <- 1 hasta cantidad Hacer
+		datoValido <- Falso
+		Mientras datoValido = Falso Hacer
+			Escribir "Ingrese el numero ", i, " de ", cantidad, ": "
+			Leer entrada
+			Si EsNumeroValido(entrada) Entonces
+				numeroIngresado <- ConvertirANumero(entrada)
+				datoValido <- Verdadero
+			Sino
+				Escribir "Entrada invalida. Se admiten solo numeros (ej: -12, 3.5)."
+			FinSi
+		FinMientras
+		numeros[i] <- numeroIngresado
+	FinPara
+
+	// Se verifica el contenido almacenado en el arreglo
+	Escribir ""
+	Escribir "Contenido del arreglo numeros:"
+	Para i <- 1 hasta cantidad Hacer
+		Escribir "   numeros[", i, "] = ", numeros[i]
+	FinPara
+	Escribir ""
+
+	// -----------------------------------------------------------------
+	// PASO III - Arreglo con las operaciones a realizar. Se carga el
+	// catalogo de las 4 operaciones aritmeticas, cada una con su nombre
+	// y su simbolo, para usarlo como menu y como despachador del paso VI.
+	// -----------------------------------------------------------------
+	nombresOperacion[1] <- "SUMA"
+	nombresOperacion[2] <- "RESTA"
+	nombresOperacion[3] <- "MULTIPLICACION"
+	nombresOperacion[4] <- "DIVISION"
+
+	simboloOperacion[1] <- "+"
+	simboloOperacion[2] <- "-"
+	simboloOperacion[3] <- "*"
+	simboloOperacion[4] <- "/"
+
+	Escribir "Operaciones disponibles en el arreglo nombresOperacion:"
+	Para i <- 1 hasta 4 Hacer
+		Escribir "   Opcion ", i, ": ", nombresOperacion[i], "  (", simboloOperacion[i], ")"
+	FinPara
+	Escribir ""
+
+	// -----------------------------------------------------------------
+	// PASO IV - Se solicita al usuario que seleccione una operacion en
+	// cada una de las 4 posiciones del arreglo operaciones.
+	// -----------------------------------------------------------------
+	Escribir "Seleccione las 4 operaciones a registrar en el arreglo operaciones."
+	Para j <- 1 hasta 4 Hacer
+		Repetir
+			Escribir ""
+			Escribir "Seleccion numero ", j, " de 4. Elija una opcion del catalogo:"
+			Escribir "   1. ", nombresOperacion[1], "  (", simboloOperacion[1], ")"
+			Escribir "   2. ", nombresOperacion[2], "  (", simboloOperacion[2], ")"
+			Escribir "   3. ", nombresOperacion[3], "  (", simboloOperacion[3], ")"
+			Escribir "   4. ", nombresOperacion[4], "  (", simboloOperacion[4], ")"
+			Escribir "Opcion elegida: "
+			Leer opcion
+			Si (opcion < 1) o (opcion > 4) Entonces
+				Escribir "Opcion invalida: digite un numero entre 1 y 4."
+			FinSi
+		Hasta Que (opcion >= 1) y (opcion <= 4)
+		operaciones[j] <- nombresOperacion[opcion]
+		Escribir "Registro -> operaciones[", j, "] = ", operaciones[j]
+	FinPara
+
+	// -----------------------------------------------------------------
+	// PASO V - Lazo Para que itera sobre el arreglo operaciones.
+	// PASO VI - Condicional multiple (Segun) que ejecuta la operacion
+	//           correspondiente a cada elemento almacenado.
+	// Antes se localiza, por busqueda secuencial, el codigo de la
+	// operacion seleccionada dentro del catalogo del paso III.
+	// -----------------------------------------------------------------
+	Escribir ""
+	Escribir "Procesando el arreglo operaciones con el lazo Para..."
+	Para k <- 1 hasta 4 Hacer
+
+		// Busqueda secuencial del codigo de la operacion seleccionada
+		codigo <- 0
+		Para j <- 1 hasta 4 Hacer
+			Si operaciones[k] = nombresOperacion[j] Entonces
+				codigo <- j
+			FinSi
+		FinPara
+
+		Segun codigo Hacer
+			1:
+				// SUMA: se recorren todos los numeros del arreglo
+				acumulado <- numeros[1]
+				Para j <- 2 hasta cantidad Hacer
+					acumulado <- acumulado + numeros[j]
+				FinPara
+				resultados[k] <- acumulado
+				estadoOperacion[k] <- "CORRECTA"
+			2:
+				// RESTA: se resta sucesivamente cada numero
+				acumulado <- numeros[1]
+				Para j <- 2 hasta cantidad Hacer
+					acumulado <- acumulado - numeros[j]
+				FinPara
+				resultados[k] <- acumulado
+				estadoOperacion[k] <- "CORRECTA"
+			3:
+				// MULTIPLICACION: producto acumulado de todos los numeros
+				acumulado <- 1
+				Para j <- 1 hasta cantidad Hacer
+					acumulado <- acumulado * numeros[j]
+				FinPara
+				resultados[k] <- acumulado
+				estadoOperacion[k] <- "CORRECTA"
+			4:
+				// DIVISION: n1 / n2 / n3 / ... ; se valida cada divisor
+				divisorEnCero <- Falso
+				Para j <- 2 hasta cantidad Hacer
+					Si numeros[j] = 0 Entonces
+						divisorEnCero <- Verdadero
+					FinSi
+				FinPara
+				Si divisorEnCero Entonces
+					resultados[k] <- 0
+					estadoOperacion[k] <- "ERROR: NO SE PUEDE DIVIDIR ENTRE CERO"
+				Sino
+					acumulado <- numeros[1]
+					Para j <- 2 hasta cantidad Hacer
+						acumulado <- acumulado / numeros[j]
+					FinPara
+					resultados[k] <- acumulado
+					estadoOperacion[k] <- "CORRECTA"
+				FinSi
+			De Otro Modo:
+				resultados[k] <- 0
+				estadoOperacion[k] <- "ERROR: OPERACION NO RECONOCIDA"
+		FinSegun
+	FinPara
+
+	// -----------------------------------------------------------------
+	// PASO VII - Se muestra el resultado de cada operacion ejecutada:
+	// una suma, una resta, una multiplicacion y una division.
+	// -----------------------------------------------------------------
+	Escribir ""
+	Escribir "========================================================"
+	Escribir "   PASO VII - RESULTADOS DE LAS OPERACIONES"
+	Escribir "========================================================"
+	operacionesConError <- 0
+	Para k <- 1 hasta 4 Hacer
+		Escribir ""
+		Escribir "Operacion ", k, " -> ", operaciones[k]
+		Si estadoOperacion[k] = "CORRECTA" Entonces
+			Escribir "   Resultado = ", resultados[k]
+		Sino
+			Escribir "   ", estadoOperacion[k]
+			operacionesConError <- operacionesConError + 1
+		FinSi
+	FinPara
+
+	Escribir ""
+	Escribir "--------------------------------------------------------"
+	Escribir "Operaciones registradas en el arreglo : 4"
+	Escribir "Operaciones ejecutadas correctamente: ", 4 - operacionesConError
+	Escribir "Operaciones con error                 : ", operacionesConError
+	Escribir "--------------------------------------------------------"
+
+	// -----------------------------------------------------------------
+	// HISTORIAL - Recorrido final de los arreglos de salida, donde queda
+	// registrada la trazabilidad de la calculadora.
+	// -----------------------------------------------------------------
+	Escribir ""
+	Escribir "HISTORIAL DE OPERACIONES (operaciones / resultados / estado)"
+	Para k <- 1 hasta 4 Hacer
+		Escribir "   [", k, "] ", operaciones[k], "  |  resultado: ", resultados[k]
+		Escribir "             |  estado: ", estadoOperacion[k]
+	FinPara
+	Escribir ""
+	Escribir "Fin de la ejecucion de MiCalculadora."
+
+FinAlgoritmo
+
+// =====================================================================
+// FUNCION AUXILIAR - Valida que una cadena sea un numero real valido.
+// Retorna Verdadero si la cadena contiene unicamente digitos, con signo
+// negativo opcional y como maximo un separador decimal.
+// La validacion se resuelve con bucles y comparacion de subcadenas,
+// sin recurrir a conversiones que puedan fallar en tiempo de ejecucion.
+// =====================================================================
+Funcion EsNumeroValido(texto)
+	Entero longitud
+	Entero pos
+	Entero j
+	Entero puntos
+	Entero digitosEncontrados
+	Logico error
+	Logico digitoValido
+	Cadena caracter
+	Cadena digitosValidos
+
+	digitosValidos <- "0123456789"
+	longitud <- Longitud(texto)
+	puntos <- 0
+	digitosEncontrados <- 0
+	error <- Falso
+	pos <- 1
+
+	// Una cadena vacia nunca es un numero valido
+	Si longitud = 0 Entonces
+		error <- Verdadero
+	FinSi
+
+	// Se admite signo negativo unicamente al inicio
+	Si error = Falso Entonces
+		Si Subcadena(texto, 1, 1) = "-" Entonces
+			pos <- 2
+		FinSi
+	FinSi
+
+	Mientras (pos <= longitud) y (error = Falso) Hacer
+		caracter <- Subcadena(texto, pos, pos)
+		Si caracter = "." Entonces
+			puntos <- puntos + 1
+			Si puntos > 1 Entonces
+				error <- Verdadero
+			FinSi
+		Sino
+			// Se comprueba que el caracter pertenezca al conjunto de digitos
+			digitoValido <- Falso
+			Para j <- 1 hasta 10 Hacer
+				Si caracter = Subcadena(digitosValidos, j, j) Entonces
+					digitoValido <- Verdadero
+				FinSi
+			FinPara
+			Si digitoValido Entonces
+				digitosEncontrados <- digitosEncontrados + 1
+			Sino
+				error <- Verdadero
+			FinSi
+		FinSi
+		pos <- pos + 1
+	FinMientras
+
+	EsNumeroValido <- (error = Falso) y (puntos <= 1) y (digitosEncontrados > 0)
+
+FinFuncion
