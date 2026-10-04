@@ -53,6 +53,7 @@ _CODIGO_COMANDOS = [
     "python src/python/mi_calculadora.py validacion",
     "python src/python/mi_calculadora.py orden_libre",
     "python -m unittest discover -s tests -v",
+    "python tests/validar_pseint.py",
 ]
 
 # Fragmentos extraidos del archivo PSeInt: (marca_inicio, marca_fin)
@@ -1186,6 +1187,15 @@ def construir_evidencias(documento) -> None:
     )
     parrafo(
         documento,
+        "El archivo tests/validar_pseint.py realiza además una verificación "
+        "estructural del pseudocódigo de PSeInt por análisis estático: confirma "
+        "que cada bloque abierto tenga su cierre, que todo arreglo esté declarado "
+        "antes de usarse, que los índices permanezcan dentro del rango declarado "
+        "y que toda variable leída haya sido declarada. Esto sustituye la "
+        "comprobación manual previa a digitar el algoritmo en el intérprete.",
+    )
+    parrafo(
+        documento,
         "Estas trazas se presentan además de las capturas de la sección 4, "
         "porque estas últimas deben tomarse de la interfaz de PSeInt por el "
         "estudiante, que es lo que exige el criterio de resolución y evidencias.",
@@ -1230,6 +1240,13 @@ def construir_pruebas(documento) -> None:
         "función de validación como los resultados aritméticos, el manejo del "
         "error de división entre cero, la validación de entradas y el despacho "
         "de operaciones en orden arbitrario. Todas las pruebas pasan.",
+    )
+    parrafo(
+        documento,
+        "Además, el pseudocódigo se sometió a una verificación estructural por "
+        "análisis estático que confirma el balance de bloques, la declaración "
+        "previa de los arreglos, el rango de los índices y la declaración de las "
+        "variables leídas.",
     )
     parrafo(
         documento,
@@ -1352,6 +1369,8 @@ def construir_referencias(documento) -> None:
             ["src/pseint/MiCalculadora.pseint", "Algoritmo en pseudocódigo (PSeInt)"],
             ["src/python/mi_calculadora.py", "Implementación de referencia en Python"],
             ["tests/test_mi_calculadora.py", "27 pruebas automáticas"],
+            ["tests/validar_pseint.py",
+             "Verificación estructural del pseudocódigo"],
             ["evidencias/generar_evidencias.py", "Generador de las figuras de consola"],
             ["evidencias/consola/", "Imágenes de salida de ejecución"],
             ["evidencias/paso_a_paso/CUADRILLA_DE_CAPTURAS.md",

@@ -57,7 +57,8 @@ taller-mi-calculadora/
 │   └── python/
 │       └── mi_calculadora.py        Implementación de referencia
 ├── tests/
-│   └── test_mi_calculadora.py       27 pruebas automáticas
+│   ├── test_mi_calculadora.py       27 pruebas automáticas
+│   └── validar_pseint.py            Verificación estructural del pseudocódigo
 ├── docs/
 │   ├── diaz_luis_taller.docx        Entregable del taller
 │   ├── generar_documento.py         Genera el .docx
@@ -92,6 +93,9 @@ python src/python/mi_calculadora.py --demo
 # Correr las 27 pruebas
 python -m unittest discover -s tests -v
 
+# Verificar la estructura del pseudocódigo antes de digitarlo en PSeInt
+python tests/validar_pseint.py
+
 # Regenerar las figuras de consola
 pip install pillow
 python evidencias/generar_evidencias.py
@@ -121,13 +125,22 @@ python docs/auditar_documento.py
 |---|---|
 | Código PSeInt completo y verificado | Listo |
 | 27 pruebas automáticas | 27/27 superadas |
-| 4 figuras de salida real de consola | Generadas |
+| Verificación estructural del pseudocódigo | Sin hallazgos |
+| Figuras de salida real de consola | 10 figuras generadas |
 | Documento `.docx` con los 7 pasos | Generado |
 | 10 capturas de la interfaz de PSeInt | **Pendientes** |
 
 Las diez capturas las toma el estudiante en su máquina, porque PSeInt es una
 aplicación de escritorio. La guía exacta está en
 [`evidencias/paso_a_paso/CUADRILLA_DE_CAPTURAS.md`](evidencias/paso_a_paso/CUADRILLA_DE_CAPTURAS.md).
+
+### Verificación estructural
+
+Como PSeInt no se puede ejecutar en un entorno automatizado,
+`tests/validar_pseint.py` comprueba por análisis estático lo que el intérprete
+comprobaría: balance de bloques, declaración previa de los arreglos, rango de
+los índices y declaración de las variables leídas. Conviene ejecutarlo antes de
+pegar el algoritmo en el editor.
 
 ---
 
