@@ -29,6 +29,7 @@ import sys
 from pathlib import Path
 
 from docx import Document
+from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Pt
 from docx.table import Table
@@ -97,19 +98,13 @@ REEMPLAZOS_COLUMNA_EVIDENCIA = {
 
 # La captura del paso VII se tomó con los números 1, 2, 3 y 4. La tabla de
 # contrastación del capítulo 7 debe citar esa misma sesión para que el
-# documento y la evidencia coincidan.
-REEMPLAZOS_DE_CALCULO = {
-    "10 + 4 + 2 + 8": "1 + 2 + 3 + 4",
-    "10 - 4 - 2 - 8": "1 - 2 - 3 - 4",
-    "10 x 4 x 2 x 8": "1 x 2 x 3 x 4",
-    "10 / 4 / 2 / 8": "1 / 2 / 3 / 4",
-}
-
-REEMPLAZOS_DE_RESULTADO = {
-    "24": "10",
-    "-4": "-8",
-    "640": "24",
-    "0.15625": "0.04166666667",
+# documento y la evidencia coincidan. Se indexa por el nombre de la operación
+# y no por el texto actual de la celda, para que el ajuste sea idempotente.
+SESION_CAPTURADA = {
+    "Suma": ("1 + 2 + 3 + 4", "10"),
+    "Resta": ("1 - 2 - 3 - 4", "-8"),
+    "Multiplicación": ("1 x 2 x 3 x 4", "24"),
+    "División": ("1 / 2 / 3 / 4", "0.04166666667"),
 }
 
 # Marcas del pseudocódigo digitado por el estudiante para extraer el
@@ -436,15 +431,16 @@ def reajustar_tabla_de_contrastacion(documento) -> int:
 
         cambios = 0
         for fila in tabla.rows[1:]:
-            celda_calculo = fila.cells[2]
-            reemplazo = REEMPLAZOS_DE_CALCULO.get(celda_calculo.text.strip())
-            if reemplazo:
-                _poner_texto_simple(celda_calculo, reemplazo)
+            operacion = fila.cells[0].text.strip()
+            destino = SESION_CAPTURADA.get(operacion)
+            if not destino:
+                continue
+            calculo, resultado = destino
+            if fila.cells[2].text.strip() != calculo:
+                _poner_texto_simple(fila.cells[2], calculo)
                 cambios += 1
-            celda_resultado = fila.cells[3]
-            reemplazo = REEMPLAZOS_DE_RESULTADO.get(celda_resultado.text.strip())
-            if reemplazo:
-                _poner_texto_simple(celda_resultado, reemplazo)
+            if fila.cells[3].text.strip() != resultado:
+                _poner_texto_simple(fila.cells[3], resultado)
                 cambios += 1
         return cambios
     return 0
@@ -501,6 +497,159 @@ def mover_captura_del_paso_v(documento) -> bool:
 
     heading_paso_vi._p.addprevious(captura)
     return True
+
+
+EXPLICACION_ERROR_120 = (
+    "La captura de esta sección documenta un hallazgo del proceso de "
+    "depuración. Al digitar un valor no numérico en la selección del menú, el "
+    "intérprete aborta con el mensaje «ERROR 120. No coinciden los tipos "
+    "(OPCION)», antes de que el programa llegue a ejecutar su propia "
+    "validación. La causa es que la instrucción Leer asigna el dato a una "
+    "variable declarada como Entero: si el valor digitado no es numérico, el "
+    "intérprete lo rechaza y detiene la ejecución, de modo que el lazo "
+    "Repetir-Hasta Que del paso IV nunca llega a revisar el rango."
+)
+
+EXPLICACION_ERROR_120_2 = (
+    "La diferencia con la captura de la sección 4.9 es notable: en esa, la "
+    "entrada abc no detiene el programa, sino que se recibe como cadena y la "
+    "función EsNumeroValido la rechaza con un mensaje propio. La validación "
+    "robusta exige, por tanto, recibir el dato como cadena y convertirlo solo "
+    "después de comprobarlo, tal como se hace con los números del arreglo."
+)
+
+EXPLICACION_ERROR_120_3 = (
+    "La lección que deja el taller es directa: la calidad de un programa no "
+    "depende únicamente de que las instrucciones estén bien elegidas, sino "
+    "también de qué tipo de dato se asigna a cada variable y en qué momento se "
+    "comprueba. Una mejora prevista para una versión posterior del algoritmo "
+    "consiste en aplicar a la selección del menú el mismo esquema de "
+    "validación que se aplica a los números."
+)
+
+
+def _crear_parrafo(documento, texto: str, *, tamano: float = 11.0) -> Paragraph:
+    """Crea un párrafo justificado con el interlineado del documento."""
+    elemento = OxmlElement("w:p")
+    pPr = OxmlElement("w:pPr")
+
+    spacing = OxmlElement("w:spacing")
+    spacing.set(qn("w:before"), "0")
+    spacing.set(qn("w:after"), "120")
+    spacing.set(qn("w:line"), "360")
+    spacing.set(qn("w:lineRule"), "auto")
+    pPr.append(spacing)
+
+    jc = OxmlElement("w:jc")
+    jc.set(qn("w:val"), "both")
+    pPr.append(jc)
+
+    elemento.append(pPr)
+
+    r = OxmlElement("w:r")
+    rPr = OxmlElement("w:rPr")
+    rFuentes = OxmlElement("w:rFonts")
+    rFuentes.set(qn("w:ascii"), "Calibri")
+    rFuentes.set(qn("w:hAnsi"), "Calibri")
+    rFuentes.set(qn("w:eastAsia"), "Calibri")
+    rPr.append(rFuentes)
+
+    tamaño = OxmlElement("w:sz")
+    tamaño.set(qn("w:val"), str(int(tamano * 2)))
+    rPr.append(tamaño)
+
+    tamaño_cx = OxmlElement("w:szCs")
+    tamaño_cx.set(qn("w:val"), str(int(tamano * 2)))
+    rPr.append(tamaño_cx)
+
+    r.append(rPr)
+    t = OxmlElement("w:t")
+    t.set(qn("xml:space"), "preserve")
+    t.text = texto
+    r.append(t)
+    elemento.append(r)
+
+    return Paragraph(elemento, documento)
+
+
+def documentar_error_120(documento) -> bool:
+    """Añade la explicación del ERROR 120 a continuación de la captura.
+
+    La captura del listado completo registra un error del intérprete que no
+    es un fallo de la lógica del algoritmo, sino una limitación de la
+    instrucción Leer ante variables tipadas. Se explica en el documento para
+    que la evidencia quede contextualizada y muestre el aprendizaje.
+    """
+    # Idempotencia: si la explicación ya está, no se vuelve a insertar
+    texto_existente = {p.text.strip() for p in documento.paragraphs}
+    if EXPLICACION_ERROR_120.strip() in texto_existente:
+        return False
+
+    # Se ubica el epígrafe del listado completo y, a partir de ahí, la
+    # captura. No vale tomar la primera imagen del documento: las capturas
+    # de los pasos I a VII también son elementos con imagen y con celda vacía.
+    hermanos = list(documento.element.body.iterchildren())
+    inicio = None
+    for indice, candidato in enumerate(hermanos):
+        if candidato.tag.split("}")[-1] != "p":
+            continue
+        texto = candidato.text or ""
+        if texto.strip().startswith("Archivo: src/pseint/"):
+            inicio = indice
+            break
+    if inicio is None:
+        return False
+
+    posicion = None
+    for indice in range(inicio, len(hermanos)):
+        if rids_de_imagen(hermanos[indice]):
+            posicion = indice
+            break
+    if posicion is None:
+        return False
+
+    textos = [EXPLICACION_ERROR_120, EXPLICACION_ERROR_120_2, EXPLICACION_ERROR_120_3]
+    for desplazamiento, texto in enumerate(textos, 1):
+        parrafo = _crear_parrafo(documento, texto)
+        hermanos[posicion + desplazamiento - 1].addnext(parrafo._p)
+
+    return True
+
+
+def retirar_explicacion_mal_ubicada(documento) -> int:
+    """Elimina la explicación insertada fuera del capítulo 5.
+
+    Una versión previa la ubicaba tras la primera captura del documento, en
+    la sección del paso I. La colocación correcta es después del epígrafe del
+    listado completo, por lo que se retiran los párrafos que quedan antes de
+    ese punto. Se opera por posición en el cuerpo y no por identidad de
+    objeto, porque lxml recicla las referencias a sus elementos.
+    """
+    objetivos = {
+        EXPLICACION_ERROR_120.strip(),
+        EXPLICACION_ERROR_120_2.strip(),
+        EXPLICACION_ERROR_120_3.strip(),
+    }
+
+    hermanos = list(documento.element.body.iterchildren())
+    posicion_listado = None
+    for indice, candidato in enumerate(hermanos):
+        if (candidato.tag.split("}")[-1] == "p"
+                and (candidato.text or "").strip().startswith("Archivo: src/pseint/")):
+            posicion_listado = indice
+            break
+    if posicion_listado is None:
+        return 0
+
+    retiradas = 0
+    for candidato in hermanos[:posicion_listado]:
+        if candidato.tag.split("}")[-1] != "p":
+            continue
+        parrafo = Paragraph(candidato, documento)
+        if parrafo.text.strip() in objetivos:
+            candidato.getparent().remove(candidato)
+            retiradas += 1
+    return retiradas
 
 
 def retirar_imagenes_huerfanas(documento) -> int:
@@ -607,6 +756,15 @@ def main() -> int:
         print("Captura del recorrido del arreglo movida a la sección del paso V.")
     else:
         print("La captura del recorrido ya estaba en la sección correcta.")
+
+    mal_ubicada = retirar_explicacion_mal_ubicada(documento)
+    if mal_ubicada:
+        print(f"Párrafos de la explicación retirados por estar mal ubicados: {mal_ubicada}")
+
+    if documentar_error_120(documento):
+        print("Explicación del ERROR 120 añadida tras la captura del listado.")
+    else:
+        print("La explicación del ERROR 120 ya estaba presente.")
 
     # 4. Se depuran las partes de imagen que quedaron sin referencia
     huerfanas = retirar_imagenes_huerfanas(documento)

@@ -128,17 +128,32 @@ python docs/auditar_documento.py
 | Verificación estructural del pseudocódigo | Sin hallazgos |
 | Figuras de salida real de consola | 10 figuras generadas |
 | Documento `.docx` con los 7 pasos | Generado |
-| 10 capturas de la interfaz de PSeInt | Insertadas por el estudiante |
+| 11 capturas de la interfaz de PSeInt | Insertadas por el estudiante |
 
-Las diez capturas fueron tomadas e insertadas en el documento. El
-procedimiento aplicado y la resolución de problemas frecuentes de PSeInt
-están en
+Las capturas fueron tomadas e insertadas en el documento. El procedimiento
+aplicado y la resolución de problemas frecuentes de PSeInt están en
+[`evidencias/paso_a_paso/CUADRILLA_DE_CAPTURAS.md`](evidencias/paso_a_paso/CUADRILLA_DE_CAPTURAS.md).
+
+Una de ellas, la del listado completo, registra el mensaje «ERROR 120. No
+coinciden los tipos (OPCION)» que produce PSeInt al digitar un valor no
+numérico en el menú. El documento lo explica en el capítulo 5: no es un fallo
+de la lógica del algoritmo, sino una limitación de la instrucción `Leer`
+cuando la variable destino está tipada, y es justamente lo que motiva validar
+los números sobre la cadena antes de convertirlos.
+
+Las capturas fueron tomadas e insertadas en el documento. El procedimiento
+aplicado y la resolución de problemas frecuentes de PSeInt están en
 [`evidencias/paso_a_paso/CUADRILLA_DE_CAPTURAS.md`](evidencias/paso_a_paso/CUADRILLA_DE_CAPTURAS.md).
 
 El documento de entrega contiene únicamente lo que pide la consigna
 (portada y desarrollo de los siete pasos). El material adicional —
 implementación de referencia, pruebas, verificación estructural, trazas de
 consola — está en este repositorio.
+
+> **Importante:** el documento ya contiene trabajo manual del estudiante.
+> `docs/generar_documento.py` se detiene si detecta un archivo de entrega
+> existente, para no sobrescribirlo. Los ajustes sobre el documento se
+> aplican con `docs/aplicar_ajustes_entrega.py`, que es idempotente.
 
 ### Verificación estructural
 
@@ -161,13 +176,14 @@ cubierto.
 Antes de entregar hay que:
 
 1. Verificar que la portada tenga institución, docente y fecha completos.
-2. Confirmar que las diez capturas están insertadas y no queda ninguna caja
+2. Confirmar que las once capturas están insertadas y no queda ninguna caja
    reservada.
 3. Confirmar el nombre del archivo: `diaz_luis_taller.docx`.
 
 > **No regenere el documento** con `docs/generar_documento.py` una vez
 > insertadas las capturas: sobrescribiría el trabajo manual. El script avisa
-> y se detiene si ya existe un archivo de entrega.
+> y se detiene si ya existe un archivo de entrega. Para ajustes posteriores
+> use `docs/aplicar_ajustes_entrega.py`.
 
 ---
 
