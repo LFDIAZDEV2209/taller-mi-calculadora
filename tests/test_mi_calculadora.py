@@ -88,24 +88,24 @@ class TestOperaciones(unittest.TestCase):
         self.salida = ejecutar(TRAZAS["exito"]["entradas"])  # type: ignore[arg-type]
 
     def test_suma_de_cuatro_numeros(self) -> None:
-        # 10 + 4 + 2 + 8 = 24
+        # 1 + 2 + 3 + 4 = 10
         self.assertIn("Operacion 1 -> SUMA", self.salida)
-        self.assertIn("Resultado = 24", self.salida)
+        self.assertIn("Resultado = 10", self.salida)
 
     def test_resta_sucesiva(self) -> None:
-        # 10 - 4 - 2 - 8 = -4
+        # 1 - 2 - 3 - 4 = -8
         self.assertIn("Operacion 2 -> RESTA", self.salida)
-        self.assertIn("Resultado = -4", self.salida)
+        self.assertIn("Resultado = -8", self.salida)
 
     def test_multiplicacion(self) -> None:
-        # 10 * 4 * 2 * 8 = 640
+        # 1 * 2 * 3 * 4 = 24
         self.assertIn("Operacion 3 -> MULTIPLICACION", self.salida)
-        self.assertIn("Resultado = 640", self.salida)
+        self.assertIn("Resultado = 24", self.salida)
 
     def test_division_encadenada(self) -> None:
-        # 10 / 4 / 2 / 8 = 0.15625
+        # 1 / 2 / 3 / 4 = 0.04166666667
         self.assertIn("Operacion 4 -> DIVISION", self.salida)
-        self.assertIn("Resultado = 0.15625", self.salida)
+        self.assertIn("Resultado = 0.04166666667", self.salida)
 
     def test_cuatro_operaciones_correctas(self) -> None:
         self.assertIn("Operaciones con error                 : 0", self.salida)

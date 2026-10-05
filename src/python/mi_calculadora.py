@@ -1,21 +1,29 @@
 """
-TALLER "MI CALCULADORA" - Implementacion de referencia en Python
+TALLER "MI CALCULADORA" - Implementación de referencia en Python
 ================================================================
 
-Este modulo reproduce, instruccion por instruccion, el algoritmo
-desarrollado en ``src/pseint/MiCalculadora.pseint``.
+Este módulo implementa el mismo algoritmo que el desarrollado en
+``src/pseint/MiCalculadora.pseint``: los mismos arreglos, la misma
+función de validación, el mismo despacho por búsqueda secuencial y los
+mismos resultados aritméticos.
 
-Proposito academico:
-    1. Verificar la logica del pseudocodigo antes de digitarla en PSeInt.
-    2. Servir como evidencia de ejecucion real (traza de consola).
-    3. Documentar la equivalencia entre pseudocodigo y lenguaje tipado.
+No es una reproducción línea por línea del pseudocódigo. La consola
+reporta la información necesaria para verificar la lógica, sin repetir
+los rótulos decorativos del intérprete, y carece de las pausas
+``Esperar`` que el pseudocódigo incluye para tomar las capturas de
+pantalla.
 
-Convencion de indexacion:
+Propósito académico:
+    1. Verificar la lógica del pseudocódigo antes de digitarla en PSeInt.
+    2. Servir como evidencia de ejecución real (traza de consola).
+    3. Documentar la equivalencia entre pseudocódigo y lenguaje tipado.
+
+Convención de indexación:
     PSeInt permite configurar la base de los arreglos en 0 o en 1. Para
-    que la equivalencia sea exacta e independiente de la configuracion de
-    la maquina, la clase ``Arreglo`` replica la convencion de indices desde
-    1 usada por el pseudocodigo, que a su vez fueaszada con una posicion
-    adicional de holgura en la instruccion ``Dimension``.
+    que la equivalencia sea exacta e independiente de la configuración de
+    la máquina, la clase ``Arreglo`` replica la convención de índices desde
+    1 usada por el pseudocódigo, que a su vez se reforzó con una posición
+    adicional de holgura en la instrucción ``Dimension``.
 """
 
 from __future__ import annotations
@@ -153,13 +161,14 @@ class Consola:
 
 
 def _a_texto(valor: object) -> str:
-    """Convierte a la notacion que PSeInt produce en la instruccion Escribir."""
+    """Convierte a la notación que PSeInt produce en la instrucción Escribir."""
     if isinstance(valor, bool):
         return "Verdadero" if valor else "Falso"
     if isinstance(valor, float):
         if valor == int(valor):
             return str(int(valor))
-        return f"{valor:g}"
+        # PSeInt muestra hasta 10 dígitos significativos
+        return f"{valor:.10g}"
     return str(valor)
 
 
@@ -335,10 +344,11 @@ def calcular(consola: Consola) -> Resultado:
 # ---------------------------------------------------------------------------
 
 TRAZAS: dict[str, dict[str, object]] = {
-    # Caso 1: los cuatro pasos del taller con resultado correcto
+        # Caso 1: los cuatro pasos del taller con resultado correcto
+    # Es la misma sesion que se documento con capturas de pantalla.
     "exito": {
         "descripcion": "Cuatro operaciones correctas sobre 4 numeros.",
-        "entradas": ["4", "10", "4", "2", "8", "1", "2", "3", "4"],
+        "entradas": ["4", "1", "2", "3", "4", "1", "2", "3", "4"],
     },
     # Caso 2: division entre cero
     "division_cero": {

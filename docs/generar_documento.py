@@ -32,7 +32,6 @@ RAIZ = Path(__file__).resolve().parents[1]
 ARCHIVO_PSEINT = RAIZ / "src" / "pseint" / "MiCalculadora.pseint"
 CARPETA_EVIDENCIAS = RAIZ / "evidencias" / "consola"
 ARCHIVO_SALIDA = Path(__file__).resolve().parent / "diaz_luis_taller.docx"
-
 AUTOR = "Luis Diaz"
 CURSO = "Estructuras de Datos"
 SEMANA = "Semana 6"
@@ -1382,6 +1381,18 @@ def construir_referencias(documento) -> None:
 
 
 def main() -> None:
+    # Protección: si ya existe un documento de entrega con capturas insertadas
+    # por el estudiante, regenerarlo las destruiría. Se exige un respaldo
+    # explícito antes de sobrescribir.
+    if ARCHIVO_SALIDA.exists():
+        print("ATENCION: ya existe un documento de entrega.")
+        print(f"  {ARCHIVO_SALIDA.name}")
+        print("Regenerarlo sobrescribiría las capturas de pantalla insertadas")
+        print("manualmente en el editor de Word.")
+        print("Para regenerar de todas formas, renombre o borre antes el")
+        print("archivo de salida.")
+        return
+
     lineas, fragmentos = cargar_fuente()
     verificar_cobertura(lineas, fragmentos)
 

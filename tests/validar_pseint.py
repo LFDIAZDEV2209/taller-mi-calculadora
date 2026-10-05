@@ -121,6 +121,16 @@ def analizar(lineas: list[str]) -> dict[str, object]:
                 declaradas.add(nombre_arreglo)
 
         # --- Declaración de variables ---
+        # Dos formas válidas en PSeInt: «Tipo nombre» y «Definir nombre Como Tipo»
+        if primera == "Definir":
+            palabras_definir = re.findall(
+                r"[A-Za-zÁÉÍÓÚáéíóúÑñ_][A-Za-z0-9_]*", codigo
+            )
+            if "Como" in palabras_definir:
+                indice_como = palabras_definir.index("Como")
+                for palabra in palabras_definir[1:indice_como]:
+                    declaradas.add(palabra)
+                continue
         if primera in TIPOS_PRIMITIVOS:
             for palabra in palabras[1:]:
                 if palabra not in ("Como",):

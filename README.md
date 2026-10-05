@@ -67,7 +67,7 @@ taller-mi-calculadora/
 │   ├── generar_evidencias.py        Genera las figuras de consola
 │   ├── consola/                     Salidas reales de ejecución (.png)
 │   └── paso_a_paso/
-│       └── CUADRILLA_DE_CAPTURAS.md Guía para tomar las capturas
+│       └── CUADRILLA_DE_CAPTURAS.md Registro del procedimiento de capturas
 └── README.md
 ```
 
@@ -128,11 +128,17 @@ python docs/auditar_documento.py
 | Verificación estructural del pseudocódigo | Sin hallazgos |
 | Figuras de salida real de consola | 10 figuras generadas |
 | Documento `.docx` con los 7 pasos | Generado |
-| 10 capturas de la interfaz de PSeInt | **Pendientes** |
+| 10 capturas de la interfaz de PSeInt | Insertadas por el estudiante |
 
-Las diez capturas las toma el estudiante en su máquina, porque PSeInt es una
-aplicación de escritorio. La guía exacta está en
+Las diez capturas fueron tomadas e insertadas en el documento. El
+procedimiento aplicado y la resolución de problemas frecuentes de PSeInt
+están en
 [`evidencias/paso_a_paso/CUADRILLA_DE_CAPTURAS.md`](evidencias/paso_a_paso/CUADRILLA_DE_CAPTURAS.md).
+
+El documento de entrega contiene únicamente lo que pide la consigna
+(portada y desarrollo de los siete pasos). El material adicional —
+implementación de referencia, pruebas, verificación estructural, trazas de
+consola — está en este repositorio.
 
 ### Verificación estructural
 
@@ -154,9 +160,14 @@ cubierto.
 
 Antes de entregar hay que:
 
-1. Completar institución, docente y fecha en la portada.
-2. Insertar las diez capturas en las cajas marcadas `PENDIENTE`.
-3. Renombrar el archivo a `diaz_luis_taller.docx`.
+1. Verificar que la portada tenga institución, docente y fecha completos.
+2. Confirmar que las diez capturas están insertadas y no queda ninguna caja
+   reservada.
+3. Confirmar el nombre del archivo: `diaz_luis_taller.docx`.
+
+> **No regenere el documento** con `docs/generar_documento.py` una vez
+> insertadas las capturas: sobrescribiría el trabajo manual. El script avisa
+> y se detiene si ya existe un archivo de entrega.
 
 ---
 

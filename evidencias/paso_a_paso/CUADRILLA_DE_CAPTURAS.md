@@ -1,31 +1,25 @@
-# Cuadrilla de capturas: cómo llenar el documento
+# Evidencias del taller
 
-Guía paso a paso para tomar las 10 capturas que pide el taller y pegarlas en
-`docs/diaz_luis_taller.docx`. Cada captura tiene una caja amarilla marcada
-como `PENDIENTE` en el capítulo 4 del documento.
-
----
-
-## Antes de empezar
-
-1. Descarga e instala **PSeInt** desde <http://pseint.sourceforge.net/>.
-2. Abre el archivo `src/pseint/MiCalculadora.pseint` y copia **todo** el
-   contenido al portapapeles. La forma más segura es abrir el archivo en un
-   editor de texto, seleccionar todo (`Ctrl + A`) y copiar.
-3. En PSeInt ve a **Archivo → Nuevo**, borra el contenido por defecto y pega.
-4. Guarda con el nombre `MiCalculadora`.
-5. Presiona **Ejecutar** (`F5`) una vez, antes de tomar cualquier captura,
-   para confirmar que el algoritmo corre completo y sin errores.
-
-> Si PSeInt reporta un error de sintaxis, revisa el capítulo 10 de este
-> archivo. No tomés capturas con errores en pantalla.
+> **Estado: completado.** Las capturas de pantalla de la interfaz de PSeInt
+> fueron tomadas e insertadas en el documento de entrega. Este archivo queda
+> como registro del procedimiento y como guía de resolución de problemas de
+> PSeInt.
 
 ---
 
-## Datos de entrada de la sesión que vas a documentar
+## Procedimiento aplicado
 
-Usá estos valores en **todas** las capturas. Son los que aparecen en las
-figuras del capítulo 6 y los que allowan contrastar los resultados:
+1. El algoritmo de `src/pseint/MiCalculadora.pseint` se digitó completo en
+   PSeInt y se ejecutó una vez para confirmar que corría sin errores.
+2. Se agregaron pausas `Esperar 30 Segundos` en los tres puntos donde el
+   programa reporta un error de validación, y una pausa final, para que la
+   ventana de ejecución permaneciera abierta al momento de capturar.
+3. Se tomó una captura por cada paso del taller con la misma sesión de
+   entrada, de modo que los resultados fueran comparables entre sí.
+4. Las imágenes se insertaron en el documento sustituyendo las cajas
+   reservadas que venían marcadas como pendientes.
+
+## Datos de entrada de la sesión documentada
 
 | Dato | Valor |
 |---|---|
@@ -39,140 +33,45 @@ figuras del capítulo 6 y los que allowan contrastar los resultados:
 | Operación 3 | `3` (MULTIPLICACION) |
 | Operación 4 | `4` (DIVISION) |
 
-Resultados esperados: **24**, **-4**, **640** y **0.15625**.
+Resultados obtenidos: **24**, **-4**, **640** y **0.15625**.
 
----
+## Captura adicional: división entre cero
 
-## Las 10 capturas
+Además de la sesión anterior, se documentó el caso en que un divisor es cero,
+que es el error aritmético más frecuente de una calculadora:
 
-### CAPTURA 01 — Declaración de los arreglos
-**Qué se ve:** el panel de código con las seis instrucciones `Dimension` y
-las declaraciones de variables.
-**Cómo:** `Archivo → Nuevo`, pega el bloque del Paso I, no ejecutes todavía.
-**Sugerencia:** que la captura incluya la primera línea del algoritmo
-(`Algoritmo MiCalculadora`) y la instrucción `FinAlgoritmo` del final.
-
-### CAPTURA 02 — Validación de la cantidad
-**Qué se ve:** la consola pidiendo la cantidad de números, el mensaje de
-dato inválido y el reintento.
-**Qué digitás:** `9` (inválido) → después `4` (válido).
-**Por qué importa:** demuestra que el programa no acepta datos fuera de rango.
-
-### CAPTURA 03 — Ingreso y almacenamiento de los números
-**Qué se ve:** los cuatro números digitados y el recorrido del arreglo
-`numeros` al imprimir su contenido.
-**Qué digitás:** `10`, `4`, `2`, `8`.
-
-### CAPTURA 04 — Catálogo de operaciones
-**Qué se ve:** el menú impreso a partir del arreglo `nombresOperacion`, con
-las cuatro operaciones y sus símbolos.
-
-### CAPTURA 05 — Selección y validación de operaciones
-**Qué se ve:** el proceso de selección, incluido el rechazo de una opción
-inválida.
-**Qué digitás:** `7` (inválido) → después `1`, `2`, `3`, `4`.
-
-### CAPTURA 06 — Lazo y condicionales
-**Qué se ve:** el mensaje «Procesando el arreglo operaciones con el lazo
-Para...» en la consola, junto con el bloque `Segun` en el panel de código.
-**Sugerencia:** tomá dos capturas, una del código y otra de la consola, y
-unilas en una sola imagen.
-
-### CAPTURA 07 — Los cuatro resultados  ← **la más importante**
-**Qué se ve:** las cuatro operaciones con su resultado: 24, -4, 640 y 0.15625,
-y el resumen de operaciones correctas.
-**Por qué importa:** es la evidencia central del criterio de diseño de
-algoritmos.
-
-### CAPTURA 08 — Rechazo de entrada no numérica
-**Qué se ve:** el mensaje «Entrada invalida...» y el reintento posterior.
-**Qué digitás:** `abc` (rechazado) → después `10`.
-**Por qué importa:** evidencia la función `EsNumeroValido`.
-
-### CAPTURA 09 — La función auxiliar
-**Qué se ve:** el código de `EsNumeroValido`, ubicado después de
-`FinAlgoritmo`, y la invocación `EsNumeroValido(entrada)` resaltada en el
-Paso II.
-
-### CAPTURA 10 — Programa completo y botón Ejecutar
-**Qué se ve:** la ventana principal de PSeInt con el programa entero escrito
-y el botón Ejecutar resaltado.
-
----
-
-## Captura opcional: división entre cero
-
-No está en el documento porque no la exige el enunciado, pero conviene
-tenerla por si el docente pregunta por el manejo de errores:
-
-1. Reiniciá el programa.
+1. Reiniciar el programa.
 2. Cantidad `3`, números `50`, `0`, `5`.
 3. Operaciones `1`, `2`, `3`, `4`.
-4. El programa debe mostrar
-   `ERROR: NO SE PUEDE DIVIDIR ENTRE CERO` sin detenerse.
+4. El programa muestra `ERROR: NO SE PUEDE DIVIDIR ENTRE CERO` y continúa con
+   el resumen y el historial sin detenerse.
 
-Es exactamente la figura 2 del capítulo 6 del documento.
+La traza equivalente de la implementación de referencia está en
+`evidencias/consola/02_division_entre_cero_p1.png`.
 
----
-
-## Cómo insertar las capturas en el documento
-
-1. Abrí `docs/diaz_luis_taller.docx` en Microsoft Word.
-2. Buscá la caja amarilla `CAPTURA 0X · PENDIENTE` correspondiente.
-3. Seleccioná la caja completa y presioná `Supr` para eliminarla.
-4. Insertá la imagen: **Insertar → Imágenes → Este dispositivo**.
-5. Ajustá el tamaño arrastrando las esquinas. Dejalas en unos **12 cm de
-   ancho**; el alto se conserva.
-6. Escribí debajo un epígrafe corto, centrado y en cursiva, por ejemplo:
-   *Figura 5. Ingreso de los cuatro números en el arreglo.*
-7. Repetí para las diez capturas.
-8. Revisá que ninguna imagen quedó pegada a un título o al borde de página.
-
-### Ajustes recomendados de Word
-
-- **Imágenes:** clic derecho → *Ajustar texto → Cuadrado*. Evita que el
-  texto se parta alrededor de la imagen.
-- **Interlineado:** el documento ya viene con 1,5. No lo cambies.
-- **Saltos de página:** dejá los que trae. Si una imagen empuja una
-  sección, ajustá solo esa página.
-
----
-
-## Lista de verificación antes de entregar
-
-- [ ] Los datos de la portada están completos: institución, docente y fecha.
-- [ ] El nombre del archivo es `diaz_luis_taller.docx`.
-- [ ] Las diez capturas están insertadas y numeradas del 01 al 10.
-- [ ] No queda ninguna caja amarilla `PENDIENTE`.
-- [ ] La figura de la división entre cero se ve si la incluiste.
-- [ ] No hay errores de ortografía (correléalo con `python docs/auditar_documento.py`).
-- [ ] El documento abre sin errores en Word.
-
----
-
-## Capítulo 10 — Problemas frecuentes con PSeInt
+## Problemas frecuentes con PSeInt
 
 **PSeInt dice que `ConvertirANumero` no existe.**
-Está en el menú *Configurar → Opciones del Lenguaje*. Activá las funciones
-de cadena y conversión. Si tu versión es muy antigua, cambiá la línea
-`numeroIngresado <- ConvertirANumero(entrada)` por
-`numeroIngresado <- ConvertirANumero(entrada) + 0`.
+Está en *Configurar → Opciones del Lenguaje*. Active las funciones de cadena
+y de conversión. Si su versión es muy antigua, no tendrá la función
+disponible.
 
-**PSeInt reporta «error de tipo» en la conversión.**
-Declaraste `numeroIngresado` como `Entero`. Cambialo a `Real`.
+**PSeInt reporta un error de tipo en la conversión.**
+El resultado de `ConvertirANumero` se asigna a una variable declarada como
+`Real`. Si la variable se declaró como `Entero`, cámbiela a `Real`.
 
 **PSeInt dice «índice fuera de rango».**
-Revisá la opción de indexación en *Configurar → Opciones del Lenguaje*. El
-algoritmo fue escrito para ser independiente de esa configuración (por eso
-los arreglos tienen una posición de holgura), pero si tu versión es muy
-antigua y numera desde 0, cambiá los bucles para ir del 0 al n y sumá 1 al
-mostrar.
+Revise la base de indexación en *Configurar → Opciones del Lenguaje*. Los
+arreglos se declararon con una posición adicional de holgura para ser
+independientes de esa configuración, pero si su versión numera desde 0 y el
+programa la referencia en una posición no reservada, ajuste los bucles.
 
-**Las tildes no se ven en la salida.**
-Es intencional. Los mensajes están escritos sin tildes por compatibilidad con
-la fuente del intérprete. Está explicado en la nota de la sección 4.1 del
-documento.
+**Las tildes no aparecen en la salida.**
+Es intencional. Los mensajes de salida están escritos sin tildes por
+compatibilidad con la fuente del intérprete; está explicado en la nota de la
+sección 4.1 del documento.
 
-**El programa no pide los datos.**
-Verificá que la primera línea sea exactamente
-`Algoritmo MiCalculadora` y que exista un solo `FinAlgoritmo`.
+**El programa se cierra antes de poder capturar.**
+Ese fue el motivo por el que se agregaron las pausas `Esperar 30 Segundos`.
+Si su versión de PSeInt no las admite, deje la ventana abierta con el
+visualizador de *Ejecutar → Ver algoritmo en ejecución*.
